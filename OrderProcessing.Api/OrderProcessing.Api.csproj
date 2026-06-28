@@ -9,10 +9,11 @@
   <ItemGroup>
     <ProjectReference Include="..\OrderProcessing.DataStore\OrderProcessing.DataStore.csproj" />
     <ProjectReference Include="..\OrderProcessing.Domain\OrderProcessing.Domain.csproj" />
+    <ProjectReference Include="..\OrderProcessing.ImportService\OrderProcessing.ImportService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
 </Project>
