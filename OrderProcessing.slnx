@@ -2,6 +2,7 @@
   <Folder Name="/Solution Items/">
     <File Path="ReadMe.md" />
   </Folder>
+  <Project Path="OrderProcessing.DataStore/OrderProcessing.DataStore.csproj" Id="f85efc53-0a1c-4afa-baaa-259217ad3bb8" />
   <Project Path="OrderProcessing.DiscountService/OrderProcessing.DiscountService.csproj" />
   <Project Path="OrderProcessing.Domain/OrderProcessing.Domain.csproj" />
   <Project Path="OrderProcessing.ImportService/OrderProcessing.ImportService.csproj" />
