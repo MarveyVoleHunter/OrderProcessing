@@ -19,4 +19,16 @@
     <ProjectReference Include="..\OrderProcessing.Domain\OrderProcessing.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DataFiles\Customers.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataFiles\OrderItems.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DataFiles\Orders.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
