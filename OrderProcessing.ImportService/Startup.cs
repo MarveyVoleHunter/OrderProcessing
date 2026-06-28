@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OrderProcessing.DataStore;
 using OrderProcessing.DiscountService;
 using OrderProcessing.DiscountService.DiscountRules;
 using OrderProcessing.ImportService.CsvReaders;
@@ -25,19 +26,9 @@ namespace OrderProcessing.ImportService
             services.AddSingleton<OrderCsvReader>();
             services.AddSingleton<OrderItemCsvReader>();
             services.AddSingleton<IEnumerable<IDiscountRule>>(discountRules);
-            services.AddSingleton<DiscountService.DiscountCalculator>();
-            //services.AddSingleton(sp => {
-            //var logger = services.BuildServiceProvider.get
-            //return new CsvConfiguration(CultureInfo.InvariantCulture)
-            //{
-            //    PrepareHeaderForMatch = args => args.Header.Replace("_", "").ToLower(),
-
-            //    ReadingExceptionOccurred = (ex) =>
-            //    {
-            //        _logger.LogWarning("Invalid data encountered.  Details: {0}", ex.Exception.Message);
-            //        return false;
-            //    }
-            //});
+            services.AddSingleton<DataImporter>();
+            services.AddSingleton<DiscountCalculator>();
+            services.AddSingleton<IRepository, Repository>();
         }
     }
 }

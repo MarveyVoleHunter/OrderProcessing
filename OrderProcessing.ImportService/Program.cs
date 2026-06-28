@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Conventions;
 using Microsoft.Extensions.DependencyInjection;
+using OrderProcessing.DataStore;
 using OrderProcessing.DiscountService;
 using OrderProcessing.Domain.Entities;
 using OrderProcessing.ImportService.CsvReaders;
@@ -8,9 +10,6 @@ namespace OrderProcessing.ImportService
 {
     internal class Program
     {
-        private IEnumerable<Customer> _customers;
-        private IEnumerable<Order> _orders;
-        private IEnumerable<OrderItem> _orderItems;
         private DiscountCalculator _discountCalculator;
 
         static void Main(string[] args)
@@ -21,56 +20,23 @@ namespace OrderProcessing.ImportService
 
         private void DoImports()
         {
-            var folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataFiles");
-
             var services = new ServiceCollection();
 
             Startup.ConfigureServices(services);
 
             var serviceProvider = services.BuildServiceProvider();
-            var mapper = serviceProvider.GetRequiredService<IMapper>();
-            var customerReader = serviceProvider.GetRequiredService<CustomerCsvReader>();
-            var orderReader = serviceProvider.GetRequiredService<OrderCsvReader>();
-            var orderItemReader = serviceProvider.GetRequiredService<OrderItemCsvReader>();
+            var importer = serviceProvider.GetRequiredService<DataImporter>();
+            var repository = serviceProvider.GetRequiredService<IRepository>();
 
-            var customerDtos = customerReader.Read(Path.Combine(folderPath, "Customers.csv"));
-            var orderDtos = orderReader.Read(Path.Combine(folderPath, "Orders.csv"));
-            var orderItemDtos = orderItemReader.Read(Path.Combine(folderPath, "OrderItems.csv"));
-            _discountCalculator = serviceProvider.GetRequiredService<DiscountCalculator>();
+            importer.DoImports();
+            var customers = repository.GetAllCustomers();
 
-            _customers = mapper.Map<IEnumerable<Customer>>(customerDtos);
-            _orders = mapper.Map<IEnumerable<Order>>(orderDtos);
-            _orderItems = mapper.Map<IEnumerable<OrderItem>>(orderItemDtos);
-
-            AssociateEntities();
-            ApplyExistingDiscounts();
-            ApplyNewDiscounts();
+            ApplyNewDiscounts(customers);
         }
 
-        private void AssociateEntities()
+        private void ApplyNewDiscounts(IEnumerable<Customer> customers)
         {
-            foreach (var order in _orders)
-            {
-                order.AddItems(_orderItems.Where(i => i.OrderId.Equals(order.OrderId)));
-            }
-
-            foreach (var customer in _customers)
-            {
-                customer.Orders.AddRange(_orders.Where(o => o.CustomerId.Equals(customer.CustomerId)));
-            }
-        }
-
-        private void ApplyExistingDiscounts()
-        {
-            foreach(var item in _orderItems)
-            {
-                item.DiscountValue = Math.Round(item.ListPrice * item.DiscountPercentage, 2);
-            }           
-        }
-
-        private void ApplyNewDiscounts()
-        {
-            foreach (var customer in _customers)
+            foreach (var customer in customers)
             {
                 _discountCalculator.ApplyDiscountsToCustomer(customer);
             }
