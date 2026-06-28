@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using OrderProcessing.DataStore;
-using OrderProcessing.DiscountService;
-using OrderProcessing.Domain.Entities;
 using OrderProcessing.ImportService;
 
 namespace OrderProcessing.Application
@@ -39,22 +36,6 @@ namespace OrderProcessing.Application
         //    foreach (var customer in customers)
         //    {
         //        _discountCalculator.ApplyDiscountsToCustomer(customer);
-        //    }
-        //}
-
-        //private void CalculateOrderTotals()
-        //{
-        //    foreach (var order in _orders)
-        //    {
-        //        order.Total = OrderTotalCalculator.Calculate(order);
-        //    }
-        //}
-//
-        //private void CalculateTotalSpend()
-        //{
-        //    foreach (var customer in _customers)
-        //    {
-        //        customer.TotalSpend = CustomerSpendCalculator.Calculate(customer);
         //    }
         //}
     }
