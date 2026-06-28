@@ -2,6 +2,7 @@ namespace OrderProcessing.Domain.Entities;
 
 public class Customer
 {
+    private readonly List<Order> _orders = [];
     public int CustomerId { get; set; }
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
@@ -13,4 +14,33 @@ public class Customer
     public required string ZipCode { get; set; }
     public List<Order> Orders { get; } = [];
     public decimal TotalSpend { get; set; }
+    
+    public void AddOrder(Order order)
+    {
+        _orders.Add(order);
+        RecalculateTotalSpend();
+    }
+
+    public void AddOrders(IEnumerable<Order> orders)
+    {
+        _orders.AddRange(orders);
+        RecalculateTotalSpend();
+    }
+
+    public void RemoveOrder(Order order)
+    {
+        _orders.Remove(order);
+        RecalculateTotalSpend();
+    }
+
+    private void RecalculateTotalSpend()
+    {
+        if (_orders.Count == 0)
+        {
+            TotalSpend = 0;
+            return;
+        }
+
+        TotalSpend = _orders.Sum(o => o.Total);
+    }
 }
