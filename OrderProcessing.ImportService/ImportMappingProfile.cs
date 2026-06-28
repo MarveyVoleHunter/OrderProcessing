@@ -4,7 +4,7 @@ using OrderProcessing.Domain.Entities;
 
 namespace OrderProcessing.ImportService;
 
-internal class ImportMappingProfile : Profile
+public class ImportMappingProfile : Profile
 {
     public ImportMappingProfile()
     {

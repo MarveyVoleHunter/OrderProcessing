@@ -34,14 +34,7 @@ namespace OrderProcessing.ImportService.CsvReaders
             csvReader.Context.TypeConverterOptionsCache.AddOptions<DateOnly>(options);
             csvReader.Context.TypeConverterOptionsCache.AddOptions<DateOnly?>(options);
 
-            try
-            {
-                return [.. csvReader.GetRecords<OrderDto>()];
-            }
-            catch 
-            {
-                return null;
-            }
+            return [.. csvReader.GetRecords<OrderDto>()];
         }
     }
 }

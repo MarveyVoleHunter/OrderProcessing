@@ -7,4 +7,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OrderProcessing.DataStore\OrderProcessing.DataStore.csproj" />
+    <ProjectReference Include="..\OrderProcessing.DiscountService\OrderProcessing.DiscountService.csproj" />
+    <ProjectReference Include="..\OrderProcessing.Domain\OrderProcessing.Domain.csproj" />
+    <ProjectReference Include="..\OrderProcessing.ImportService\OrderProcessing.ImportService.csproj" />
+  </ItemGroup>
+
 </Project>

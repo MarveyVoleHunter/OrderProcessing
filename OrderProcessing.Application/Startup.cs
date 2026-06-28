@@ -3,9 +3,10 @@ using Microsoft.Extensions.Logging;
 using OrderProcessing.DataStore;
 using OrderProcessing.DiscountService;
 using OrderProcessing.DiscountService.DiscountRules;
+using OrderProcessing.ImportService;
 using OrderProcessing.ImportService.CsvReaders;
 
-namespace OrderProcessing.ImportService
+namespace OrderProcessing.Application
 {
     internal class Startup
     {
