@@ -6,6 +6,9 @@
   <title>Order Processing Viewer</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
+    html, body {
+      height: 100%;
+    }
     body {
       font-family: Arial, sans-serif;
       margin: 20px;
@@ -24,9 +27,9 @@
     .main-layout {
       display: grid;
       grid-template-columns: 340px minmax(320px, 1fr);
-      grid-template-rows: 300px minmax(200px, 1fr);
+      grid-template-rows: 260px minmax(320px, 1fr);
       gap: 20px;
-      min-height: calc(100vh - 160px);
+      min-height: calc(100vh - 120px);
     }
     .panel {
       border: 1px solid #ddd;
@@ -35,17 +38,22 @@
       background: #fafafa;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
     .panel-body {
       overflow-y: auto;
       padding-right: 4px;
+      flex: 1 1 auto;
+      min-height: 0;
     }
     .panel-customers {
       grid-row: 1 / span 2;
       min-height: 0;
+      max-height: calc(100vh - 120px);
     }
     .panel-orders {
       min-height: 0;
+      max-height: 260px;
     }
     .panel-items {
       min-height: 0;
