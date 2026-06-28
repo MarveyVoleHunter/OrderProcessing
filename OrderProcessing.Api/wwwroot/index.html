@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Processing Viewer</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      color: #222;
+    }
+    h1, h2 {
+      margin-top: 0;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .panel {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      background: #fafafa;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+    .list-item:last-child {
+      border-bottom: none;
+    }
+    .list-item.selected {
+      background: #e8f1ff;
+      font-weight: bold;
+    }
+    .small-text {
+      color: #555;
+      font-size: 0.9rem;
+    }
+    .empty-state {
+      color: #666;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Order Processing Viewer</h1>
+    <div class="layout">
+      <section class="panel">
+        <h2>Customers</h2>
+        <ul class="list">
+          <li
+            v-for="customer in customers"
+            :key="customer.customerId"
+            :class="['list-item', { selected: customer.customerId === selectedCustomerId }]"
+            @click="selectCustomer(customer.customerId)"
+          >
+            {{ customer.firstName }} {{ customer.lastName }}
+            <div class="small-text">
+              {{ customer.street }}, {{ customer.city }}, {{ customer.state }} {{ customer.zipCode }}
+            </div>
+          </li>
+        </ul>
+        <div v-if="!customers.length" class="empty-state">Loading customers...</div>
+      </section>
+      <section class="panel">
+        <h2>Orders</h2>
+        <ul class="list">
+          <li
+            v-for="order in customerOrders"
+            :key="order.orderId"
+            :class="['list-item', { selected: order.orderId === selectedOrderId }]"
+            @click="selectOrder(order.orderId)"
+          >
+            Order #{{ order.orderId }} - {{ order.orderStatus }}
+            <div class="small-text">
+              Order Date: {{ order.orderDate || 'N/A' }} |
+              Required: {{ order.requiredDate || 'N/A' }} |
+              Shipped: {{ order.shippedDate || 'N/A' }}
+            </div>
+            <div class="small-text">Total: {{ formatCurrency(order.total) }}</div>
+          </li>
+        </ul>
+        <div v-if="selectedCustomerId && !customerOrders.length" class="empty-state">No orders found for this customer.</div>
+        <div v-if="!selectedCustomerId" class="empty-state">Select a customer to view orders.</div>
+      </section>
+    </div>
+    <section class="panel" style="margin-top: 20px;">
+      <h2>Order Items</h2>
+      <ul class="list">
+        <li v-for="item in orderItems" :key="item.itemId" class="list-item">
+          Item #{{ item.itemId }} - List Price: {{ formatCurrency(item.listPrice) }}
+          <div class="small-text">
+            Discount: {{ item.discountPercentage || 0 }}% |
+            Value: {{ formatCurrency(item.discountValue || 0) }} |
+            Discounted: {{ formatCurrency(item.discountedPrice || 0) }}
+          </div>
+        </li>
+      </ul>
+      <div v-if="selectedOrderId && !orderItems.length" class="empty-state">No items found for this order.</div>
+      <div v-if="!selectedOrderId" class="empty-state">Select an order to view items.</div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -31,6 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.MapGet("/", () => Results.Redirect("/index.html"));
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
