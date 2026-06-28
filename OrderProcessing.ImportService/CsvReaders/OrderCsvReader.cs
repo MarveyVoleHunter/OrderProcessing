@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace OrderProcessing.ImportService.CsvReaders
 {
-    internal class OrderCsvReader
+    public class OrderCsvReader
     {
         private readonly ILogger _logger;
 

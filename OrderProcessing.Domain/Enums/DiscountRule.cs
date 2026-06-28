@@ -3,6 +3,6 @@
     public enum DiscountRule
     {
         None,
-        FivePercentDiscount
+        CaliforniaDiscountRule
     }
 }

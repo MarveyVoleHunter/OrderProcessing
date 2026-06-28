@@ -1,13 +1,8 @@
-﻿using CsvHelper.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OrderProcessing.DiscountService;
+using OrderProcessing.DiscountService.DiscountRules;
 using OrderProcessing.ImportService.CsvReaders;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderProcessing.ImportService
 {
@@ -15,6 +10,11 @@ namespace OrderProcessing.ImportService
     {
         public static void ConfigureServices(IServiceCollection services)
         {
+            var discountRules = new List<IDiscountRule>
+            {
+                new CaliforniaDiscountRule(),
+            };
+            
             services.AddAutoMapper(cfg => { cfg.AddProfile<ImportMappingProfile>(); });
             services.AddLogging(builder => builder
                 .AddFilter("Microsoft", LogLevel.Warning)
@@ -24,6 +24,8 @@ namespace OrderProcessing.ImportService
             services.AddSingleton<CustomerCsvReader>();
             services.AddSingleton<OrderCsvReader>();
             services.AddSingleton<OrderItemCsvReader>();
+            services.AddSingleton<IEnumerable<IDiscountRule>>(discountRules);
+            services.AddSingleton<DiscountService.DiscountCalculator>();
             //services.AddSingleton(sp => {
             //var logger = services.BuildServiceProvider.get
             //return new CsvConfiguration(CultureInfo.InvariantCulture)

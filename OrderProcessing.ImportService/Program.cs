@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using OrderProcessing.ImportService.CsvReaders;
+using OrderProcessing.DiscountService;
 using OrderProcessing.Domain.Entities;
-using OrderProcessing.Domain.Services;
+using OrderProcessing.ImportService.CsvReaders;
 
 namespace OrderProcessing.ImportService
 {
@@ -11,6 +11,7 @@ namespace OrderProcessing.ImportService
         private IEnumerable<Customer> _customers;
         private IEnumerable<Order> _orders;
         private IEnumerable<OrderItem> _orderItems;
+        private DiscountCalculator _discountCalculator;
 
         static void Main(string[] args)
         {
@@ -20,7 +21,7 @@ namespace OrderProcessing.ImportService
 
         private void DoImports()
         {
-            var folderPath = "C:\\Development\\Technical Assessment\\ImportFiles";
+            var folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DataFiles");
 
             var services = new ServiceCollection();
 
@@ -35,14 +36,15 @@ namespace OrderProcessing.ImportService
             var customerDtos = customerReader.Read(Path.Combine(folderPath, "Customers.csv"));
             var orderDtos = orderReader.Read(Path.Combine(folderPath, "Orders.csv"));
             var orderItemDtos = orderItemReader.Read(Path.Combine(folderPath, "OrderItems.csv"));
+            _discountCalculator = serviceProvider.GetRequiredService<DiscountCalculator>();
 
             _customers = mapper.Map<IEnumerable<Customer>>(customerDtos);
             _orders = mapper.Map<IEnumerable<Order>>(orderDtos);
             _orderItems = mapper.Map<IEnumerable<OrderItem>>(orderItemDtos);
 
             AssociateEntities();
-            CalculateOrderTotals();
-            CalculateTotalSpend();
+            ApplyExistingDiscounts();
+            ApplyNewDiscounts();
         }
 
         private void AssociateEntities()
@@ -58,20 +60,36 @@ namespace OrderProcessing.ImportService
             }
         }
 
-        private void CalculateOrderTotals()
+        private void ApplyExistingDiscounts()
         {
-            foreach (var order in _orders)
+            foreach(var item in _orderItems)
             {
-                order.Total = OrderTotalCalculator.Calculate(order);
-            }
+                item.DiscountValue = Math.Round(item.ListPrice * item.DiscountPercentage, 2);
+            }           
         }
 
-        private void CalculateTotalSpend()
+        private void ApplyNewDiscounts()
         {
             foreach (var customer in _customers)
             {
-                customer.TotalSpend = CustomerSpendCalculator.Calculate(customer);
+                _discountCalculator.ApplyDiscountsToCustomer(customer);
             }
         }
+
+        //private void CalculateOrderTotals()
+        //{
+        //    foreach (var order in _orders)
+        //    {
+        //        order.Total = OrderTotalCalculator.Calculate(order);
+        //    }
+        //}
+//
+        //private void CalculateTotalSpend()
+        //{
+        //    foreach (var customer in _customers)
+        //    {
+        //        customer.TotalSpend = CustomerSpendCalculator.Calculate(customer);
+        //    }
+        //}
     }
 }

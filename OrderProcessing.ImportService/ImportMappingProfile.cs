@@ -13,8 +13,9 @@ internal class ImportMappingProfile : Profile
 
         CreateMap<OrderDto, Order>()
             .ForMember(dest => dest.OrderItems, opt => opt.Ignore())
-            .ForMember(dest => dest.DiscountRule, opt => opt.Ignore());
+            .ForMember(dest => dest.AppliedDiscounts, opt => opt.Ignore());
 
-        CreateMap<OrderItemDto, OrderItem>();
+        CreateMap<OrderItemDto, OrderItem>()
+            .ForMember(dest => dest.DiscountPercentage, opt => opt.MapFrom(i => i.Discount));
     }
 }
