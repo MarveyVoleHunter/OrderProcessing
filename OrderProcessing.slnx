@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="ReadMe.md" />
+  </Folder>
+  <Project Path="OrderProcessing.DiscountService/OrderProcessing.DiscountService.csproj" />
+  <Project Path="OrderProcessing.Domain/OrderProcessing.Domain.csproj" />
+  <Project Path="OrderProcessing.ImportService/OrderProcessing.ImportService.csproj" />
+</Solution>
